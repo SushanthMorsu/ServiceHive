@@ -73,6 +73,22 @@ class AutoStreamAgentTests(unittest.TestCase):
         self.assertIn("valid email", response.lower())
         self.assertNotIn("Lead captured successfully", captured_output.getvalue())
 
+    def test_high_intent_phrase_is_not_used_as_name(self):
+        agent = AutoStreamAgent()
+        captured_output = io.StringIO()
+
+        with redirect_stdout(captured_output):
+            first = agent.respond("ready to start")
+            second = agent.respond("msr")
+            third = agent.respond("Msr@gmail.com")
+            fourth = agent.respond("insta")
+
+        self.assertIn("name", first.lower())
+        self.assertIn("email", second.lower())
+        self.assertIn("platform", third.lower())
+        self.assertIn("Lead captured successfully: Msr, Msr@gmail.com, insta", captured_output.getvalue())
+        self.assertNotIn("ready to start", fourth.lower())
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -329,15 +329,26 @@ def _extract_platform(text: str) -> Optional[str]:
 def _extract_name(text: str) -> Optional[str]:
     cleaned = text.strip()
     lowered = cleaned.lower()
+    if detect_intent(cleaned) == "high_intent":
+        return None
     blocked_phrases = [
         "i want to",
         "get started",
+        "ready to start",
+        "ready to buy",
+        "want to try",
+        "subscribe",
+        "buy",
+        "purchase",
         "sign me up",
         "sign up",
+        "signup",
         "start trial",
         "free trial",
         "book a demo",
         "talk to sales",
+        "i'm interested",
+        "interested in signing up",
     ]
     if any(phrase in lowered for phrase in blocked_phrases):
         return None
